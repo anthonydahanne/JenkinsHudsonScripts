@@ -1,0 +1,53 @@
+<!-- Strongly inspired by https://gist.github.com/alexschwartz/912787 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>Build Parser</title>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var baseUrl;
+      $('button').click(function(){
+        baseUrl = $("#baseUrl").val();
+        $("#jobUrl").html(baseUrl)
+
+        var success = function(json) {
+          var allJobs = json["jobs"];
+          var nonSuccessfulJobs = allJobs.filter(function( job ) {
+            return job["lastBuild"] != null && job["lastBuild"]["result"] != "SUCCESS";
+          });
+
+          $("#downstream").html(nonSuccessfulJobs.length + " out of " + allJobs.length + " are currently failing");
+          $.each(nonSuccessfulJobs, function( index, value ) {
+            $("#downstream").append("<br />Job name : " + value["displayName"] + " : "+ value["lastBuild"]["result"] );
+          });
+        };
+
+        $.ajax({
+          url: baseUrl + "/api/json",
+          data: "depth=1&tree=jobs[displayName,lastBuild[result]]&jsonp=callBack",
+          jsonpCallback: "callBack",
+          dataType: 'jsonp',
+
+          success: success
+        });
+      });
+    });
+  </script>
+</head>
+<body marginwidth="50" marginheight="50" topmargin="50" leftmargin="50">
+<h3>Input Data</h3>
+
+Hudson/Jenkins Base URL:
+<input type="text" id="baseUrl" value="https://hudson.eclipse.org/hudson/" size="80" /><br/>
+
+<button>update</button><br />
+
+<h2>Output</h2>
+
+<h3>Failing Jobs</h3>
+<div id="downstream">
+</div>
+
+
+</body></html>

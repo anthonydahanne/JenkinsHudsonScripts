@@ -1,0 +1,60 @@
+<!-- Strongly inspired by https://gist.github.com/alexschwartz/912787 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>UpdateCenter</title>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+
+  // this is a custom function to make jsonp requests to the server.
+  function jsonp(url) {
+    var script = document.createElement("script");
+    script.setAttribute("type","text/javascript");
+    script.setAttribute("src", url);
+    document.getElementsByTagName("head")[0].appendChild(script);
+  }
+
+  function Center() {
+  }   
+
+  Center.prototype.post = function(json) {
+    var allPlugins = json["plugins"];
+    $("#downstream").html("There are : " + Object.keys(allPlugins).length + " plugins available<ul id=\"pluginsList\"></ul>");
+    $.each(allPlugins, function( index, value ) {
+      $("#pluginsList").append("<li><b>" + value["name"] + "</b>, <i>built on " +  value["buildDate"] + "</i></li>");
+    });
+  }
+
+  var updateCenter = new Center();
+
+  $(document).ready(function(){
+    $("#jenkinsUpdateCenter").click(function() { $("#baseUrl").val($(this).text()); });
+    $("#hudsonUpdateCenter").click(function() { $("#baseUrl").val($(this).text()); });
+
+    var baseUrl;
+    $('button').click(function(){
+      baseUrl = $("#baseUrl").val();
+      $("#jobUrl").html(baseUrl);
+      jsonp(baseUrl);
+    });
+  });
+  </script>
+</head>
+<body marginwidth="50" marginheight="50" topmargin="50" leftmargin="50">
+<h3>Input Data</h3>
+Hudson/Jenkins Update Center URL : <input type="text" id="baseUrl" value="http://hudson-ci.org/update-center3/update-center.json" size="80" /><br />
+You can try with <a id="jenkinsUpdateCenter"  href="#">http://mirror.xmission.com/jenkins/updates/update-center.json</a> or <a  id="hudsonUpdateCenter" href="#">http://hudson-ci.org/update-center3/update-center.json</a>
+<br />
+
+<button>update</button><br />
+
+<h2>Output</h2>
+
+<h3>Plugins</h3>
+<div id="downstream">
+<ul id="pluginsList">
+</ul>
+
+</div>
+
+
+</body></html>
