@@ -10,9 +10,11 @@ Those scripts are written in Groovy, Python and JavaScript
 
 ### html/UpdateCenter.html
 Just load that file in your browser and choose an update center to request; you'll get the list of available plugins
+Click on this link to try it out : http://htmlpreview.github.io/?https://github.com/anthonydahanne/JenkinsHudsonScripts/blob/master/html/UpdateCenter.html
 
 ### html/BuildParser.html
 Just load that file in your browser and give a valid jenkins to request; you'll get the list of failing jobs
+Click on this link to try it out : http://htmlpreview.github.io/?https://github.com/anthonydahanne/JenkinsHudsonScripts/blob/master/html/BuildParser.html
 
 ### groovy/src/BuildParser.groovy
 Simply run the script with your Jenkins URL, for example :
